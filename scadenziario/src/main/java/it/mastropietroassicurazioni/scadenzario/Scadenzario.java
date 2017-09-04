@@ -56,6 +56,13 @@ import it.mastropietroassicurazioni.scadenzario.notifications.NotificationsManag
 import it.mastropietroassicurazioni.scadenzario.sms.SmsSender;
 import it.mastropietroassicurazioni.scadenzario.utils.ExcelTableIterator;
 import it.mastropietroassicurazioni.scadenzario.utils.ExcelTableRow;
+import javax.swing.SwingConstants;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import java.awt.Color;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
 
 public class Scadenzario {
 
@@ -78,9 +85,6 @@ public class Scadenzario {
 	private JTable tableScadenze;
 	private JTable tableCompleanni;
 	private JTable tablePromemoria;
-	
-	private JButton btnScadenze;
-	private JButton btnCompleanni;
 	private JTextField textFieldSheetAnagrafica;
 	private JLabel lblNomeTabellaAnagrafica;
 	private JTextField textFieldTabellaAnagrafica;
@@ -124,7 +128,6 @@ public class Scadenzario {
 	private JTextField textFieldSheetVersamenti;
 	private JTextField textFieldTabellaVersamenti;
 	private JTable tableVersamenti;
-	private JButton btnVersamenti;
 	private JLabel lblNumeroGiorniPromemoria;
 	private JLabel lblNumeroGiorniPromemoria_1;
 	private JTextField textFieldGiorniPromemoriaScadenze;
@@ -139,6 +142,21 @@ public class Scadenzario {
 	private JTextField textFieldSmsNumberFrom;
 	private JLabel lblSmsDisponibili;
 	private JLabel lblValoreSmsDisponibili;
+	private JPanel panel_bottoni_scadenze;
+	private JButton buttonInvioNotificheScadenza;
+	private JButton buttonSelezionaMailNotificheScadenza;
+	private JButton buttonAggiornaNotificheScadenza;
+	private JButton buttonSelezionaSmsNotificheScadenza;
+	private JButton buttonSelezionaIgnoraNotificheScadenza;
+	private JPanel panel_bottoni_versamenti;
+	private JButton buttonSelezionaVersamenti;
+	private JButton buttonAggiornaNotificheVersamenti;
+	private JButton buttonIgnoraVersamenti;
+	private JPanel panel_bottoni_compleanni;
+	private JButton buttonSelezionaMailNotificaCompleanni;
+	private JButton buttonSelezionaSMSNotificaCompleanni;
+	private JButton buttonAggiornaCompleanni;
+	private JButton buttonInviaNotificaCompleanni;
 	
 	
 
@@ -171,7 +189,7 @@ public class Scadenzario {
 	private void initialize() {
 		frmScadenzario = new JFrame();
 		frmScadenzario.setTitle("Scadenzario");
-		frmScadenzario.setBounds(100, 100, 830, 683);
+		frmScadenzario.setBounds(100, 100, 1600, 683);
 		frmScadenzario.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		tabbedPane = new JTabbedPane();
@@ -211,9 +229,67 @@ public class Scadenzario {
 		tableScadenze.setDefaultRenderer(Date.class, new DateCellRenderer());
 		scrollPaneScadenze.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPaneScadenze.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-		panel_scadenze.add(scrollPaneScadenze, BorderLayout.CENTER);	
-		btnScadenze = new JButton("Invia notifiche di scadenza");
-		btnScadenze.addMouseListener(new MouseAdapter() {
+		panel_scadenze.add(scrollPaneScadenze, BorderLayout.CENTER);
+		
+
+		/** VERSAMENTI **/
+		
+		panel_versamenti = new JPanel();
+		tabbedPane.addTab("Versamenti", null, panel_versamenti, null);
+		panel_versamenti.setLayout(new BorderLayout());
+		tableScadenze.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		
+		panel_bottoni_scadenze = new JPanel();
+		panel_scadenze.add(panel_bottoni_scadenze, BorderLayout.SOUTH);
+		GridBagLayout gbl_panel_bottoni_scadenze = new GridBagLayout();
+		gbl_panel_bottoni_scadenze.columnWidths = new int[]{871, 133, 135, 145, 76, 159, 0};
+		gbl_panel_bottoni_scadenze.rowHeights = new int[]{23, 0};
+		gbl_panel_bottoni_scadenze.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel_bottoni_scadenze.rowWeights = new double[]{0.0, Double.MIN_VALUE};
+		panel_bottoni_scadenze.setLayout(gbl_panel_bottoni_scadenze);
+		
+		buttonSelezionaMailNotificheScadenza = new JButton("Deseleziona tutti mail");
+		buttonSelezionaMailNotificheScadenza.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				boolean selezionaTutti = "Seleziona tutti mail".equals(((JButton)e.getSource()).getText());
+				for(int rowIndex = 0; rowIndex < tableScadenze.getModel().getRowCount(); rowIndex++){
+					String email = (String)tableScadenze.getModel().getValueAt(rowIndex, 17);
+					tableScadenze.getModel().setValueAt(Boolean.valueOf(selezionaTutti && !"".equals(email.trim())), rowIndex, 1);
+				}
+				((JButton)e.getSource()).setText(selezionaTutti?"Deseleziona tutti mail":"Seleziona tutti mail");
+			}
+		});
+		GridBagConstraints gbc_buttonSelezionaMailNotificheScadenza = new GridBagConstraints();
+		gbc_buttonSelezionaMailNotificheScadenza.fill = GridBagConstraints.HORIZONTAL;
+		gbc_buttonSelezionaMailNotificheScadenza.anchor = GridBagConstraints.NORTHWEST;
+		gbc_buttonSelezionaMailNotificheScadenza.insets = new Insets(0, 0, 0, 5);
+		gbc_buttonSelezionaMailNotificheScadenza.gridx = 1;
+		gbc_buttonSelezionaMailNotificheScadenza.gridy = 0;
+		panel_bottoni_scadenze.add(buttonSelezionaMailNotificheScadenza, gbc_buttonSelezionaMailNotificheScadenza);
+		
+		buttonSelezionaSmsNotificheScadenza = new JButton("Deseleziona tutti SMS");
+		buttonSelezionaSmsNotificheScadenza.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				boolean selezionaTutti = "Seleziona tutti SMS".equals(((JButton)e.getSource()).getText());
+				for(int rowIndex = 0; rowIndex < tableScadenze.getModel().getRowCount(); rowIndex++){
+					String sms = (String)tableScadenze.getModel().getValueAt(rowIndex, 18);
+					tableScadenze.getModel().setValueAt(Boolean.valueOf(selezionaTutti && !"".equals(sms.trim())), rowIndex, 0);
+				}
+				((JButton)e.getSource()).setText(selezionaTutti?"Deseleziona tutti SMS":"Seleziona tutti SMS");
+			}
+		});
+		GridBagConstraints gbc_buttonSelezionaSmsNotificheScadenza = new GridBagConstraints();
+		gbc_buttonSelezionaSmsNotificheScadenza.anchor = GridBagConstraints.NORTHWEST;
+		gbc_buttonSelezionaSmsNotificheScadenza.insets = new Insets(0, 0, 0, 5);
+		gbc_buttonSelezionaSmsNotificheScadenza.gridx = 2;
+		gbc_buttonSelezionaSmsNotificheScadenza.gridy = 0;
+		panel_bottoni_scadenze.add(buttonSelezionaSmsNotificheScadenza, gbc_buttonSelezionaSmsNotificheScadenza);
+		
+		buttonInvioNotificheScadenza = new JButton("Invia notifiche di scadenza");
+		buttonInvioNotificheScadenza.setHorizontalAlignment(SwingConstants.LEFT);
+		buttonInvioNotificheScadenza.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				NotificationsManager notificationsManager = new NotificationsManager();
@@ -290,14 +366,44 @@ public class Scadenzario {
 				buildTables();
 			}
 		});
-		panel_scadenze.add(btnScadenze, BorderLayout.SOUTH);
 		
-
-		/** VERSAMENTI **/
+		buttonSelezionaIgnoraNotificheScadenza = new JButton("Deseleziona tutti ignora");
+		buttonSelezionaIgnoraNotificheScadenza.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				boolean selezionaTutti = "Seleziona tutti ignora".equals(((JButton)e.getSource()).getText());
+				for(int rowIndex = 0; rowIndex < tableScadenze.getModel().getRowCount(); rowIndex++){
+					tableScadenze.getModel().setValueAt(Boolean.valueOf(selezionaTutti), rowIndex, 2);
+				}
+				((JButton)e.getSource()).setText(selezionaTutti?"Deseleziona tutti ignora":"Seleziona tutti ignora");
+			}
+		});
+		GridBagConstraints gbc_buttonSelezionaIgnoraNotificheScadenza = new GridBagConstraints();
+		gbc_buttonSelezionaIgnoraNotificheScadenza.anchor = GridBagConstraints.NORTHWEST;
+		gbc_buttonSelezionaIgnoraNotificheScadenza.insets = new Insets(0, 0, 0, 5);
+		gbc_buttonSelezionaIgnoraNotificheScadenza.gridx = 3;
+		gbc_buttonSelezionaIgnoraNotificheScadenza.gridy = 0;
+		panel_bottoni_scadenze.add(buttonSelezionaIgnoraNotificheScadenza, gbc_buttonSelezionaIgnoraNotificheScadenza);
 		
-		panel_versamenti = new JPanel();
-		tabbedPane.addTab("Versamenti", null, panel_versamenti, null);
-		panel_versamenti.setLayout(new BorderLayout());
+		buttonAggiornaNotificheScadenza = new JButton("Aggiorna tabella");
+		buttonAggiornaNotificheScadenza.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				buildTables();
+			}
+		});
+		GridBagConstraints gbc_buttonAggiornaNotificheScadenza = new GridBagConstraints();
+		gbc_buttonAggiornaNotificheScadenza.anchor = GridBagConstraints.NORTHWEST;
+		gbc_buttonAggiornaNotificheScadenza.insets = new Insets(0, 0, 0, 5);
+		gbc_buttonAggiornaNotificheScadenza.gridx = 4;
+		gbc_buttonAggiornaNotificheScadenza.gridy = 0;
+		panel_bottoni_scadenze.add(buttonAggiornaNotificheScadenza, gbc_buttonAggiornaNotificheScadenza);
+		GridBagConstraints gbc_buttonInvioNotificheScadenza = new GridBagConstraints();
+		gbc_buttonInvioNotificheScadenza.anchor = GridBagConstraints.EAST;
+		gbc_buttonInvioNotificheScadenza.fill = GridBagConstraints.VERTICAL;
+		gbc_buttonInvioNotificheScadenza.gridx = 5;
+		gbc_buttonInvioNotificheScadenza.gridy = 0;
+		panel_bottoni_scadenze.add(buttonInvioNotificheScadenza, gbc_buttonInvioNotificheScadenza);
 		
 		tableVersamenti = new JTable(new DefaultTableModel(new String[]{"Ignora","Contraente","Compagnia","Polizza","Importo rata","Data incasso","Data prevista versamento"},0){
 			/**
@@ -322,15 +428,56 @@ public class Scadenzario {
 				return clazz != null? clazz:String.class;
 			}
 		});
-		tableScadenze.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		
 		JScrollPane scrollPaneVersamenti = new JScrollPane(tableVersamenti);
 		tableVersamenti.setDefaultRenderer(Date.class, new DateCellRenderer());
 		scrollPaneVersamenti.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPaneVersamenti.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		panel_versamenti.add(scrollPaneVersamenti, BorderLayout.CENTER);	
 		
-		btnVersamenti = new JButton("Ignora notifiche di versamento");
-		btnVersamenti.addMouseListener(new MouseAdapter() {
+		panel_bottoni_versamenti = new JPanel();
+		panel_versamenti.add(panel_bottoni_versamenti, BorderLayout.SOUTH);
+		GridBagLayout gbl_panel_bottoni_versamenti = new GridBagLayout();
+		gbl_panel_bottoni_versamenti.columnWidths = new int[]{625, 10, 10, 179, 0};
+		gbl_panel_bottoni_versamenti.rowHeights = new int[]{23, 0};
+		gbl_panel_bottoni_versamenti.columnWeights = new double[]{0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
+		gbl_panel_bottoni_versamenti.rowWeights = new double[]{0.0, Double.MIN_VALUE};
+		panel_bottoni_versamenti.setLayout(gbl_panel_bottoni_versamenti);
+		
+		buttonSelezionaVersamenti = new JButton("Deseleziona tutti ignora");
+		buttonSelezionaVersamenti.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				boolean selezionaTutti = "Seleziona tutti ignora".equals(((JButton)e.getSource()).getText());
+				for(int rowIndex = 0; rowIndex < tableVersamenti.getModel().getRowCount(); rowIndex++){
+					tableVersamenti.getModel().setValueAt(Boolean.valueOf(selezionaTutti), rowIndex, 0);
+				}
+				((JButton)e.getSource()).setText(selezionaTutti?"Deseleziona tutti ignora":"Seleziona tutti ignora");
+			}
+		});
+		GridBagConstraints gbc_buttonSelezionaVersamenti = new GridBagConstraints();
+		gbc_buttonSelezionaVersamenti.anchor = GridBagConstraints.NORTHEAST;
+		gbc_buttonSelezionaVersamenti.insets = new Insets(0, 0, 0, 5);
+		gbc_buttonSelezionaVersamenti.gridx = 1;
+		gbc_buttonSelezionaVersamenti.gridy = 0;
+		panel_bottoni_versamenti.add(buttonSelezionaVersamenti, gbc_buttonSelezionaVersamenti);
+		
+		buttonAggiornaNotificheVersamenti = new JButton("Aggiorna tabella");
+		buttonAggiornaNotificheVersamenti.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				buildTables();
+			}
+		});
+		GridBagConstraints gbc_buttonAggiornaNotificheVersamenti = new GridBagConstraints();
+		gbc_buttonAggiornaNotificheVersamenti.anchor = GridBagConstraints.NORTHEAST;
+		gbc_buttonAggiornaNotificheVersamenti.insets = new Insets(0, 0, 0, 5);
+		gbc_buttonAggiornaNotificheVersamenti.gridx = 2;
+		gbc_buttonAggiornaNotificheVersamenti.gridy = 0;
+		panel_bottoni_versamenti.add(buttonAggiornaNotificheVersamenti, gbc_buttonAggiornaNotificheVersamenti);
+		
+		buttonIgnoraVersamenti = new JButton("Ignora notifiche di versamento");
+		buttonIgnoraVersamenti.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				NotificationsManager notificationsManager = new NotificationsManager();
@@ -347,8 +494,13 @@ public class Scadenzario {
 				buildTables();
 			}
 		});
-		panel_versamenti.add(btnVersamenti, BorderLayout.SOUTH);
-		
+		GridBagConstraints gbc_buttonIgnoraVersamenti = new GridBagConstraints();
+		gbc_buttonIgnoraVersamenti.fill = GridBagConstraints.HORIZONTAL;
+		gbc_buttonIgnoraVersamenti.anchor = GridBagConstraints.NORTH;
+		gbc_buttonIgnoraVersamenti.gridx = 3;
+		gbc_buttonIgnoraVersamenti.gridy = 0;
+		panel_bottoni_versamenti.add(buttonIgnoraVersamenti, gbc_buttonIgnoraVersamenti);
+	
 		/** COMPLEANNI **/
 		
 		panel_compleanni = new JPanel();
@@ -362,7 +514,7 @@ public class Scadenzario {
 			private static final long serialVersionUID = 1L;
 
 			public boolean isCellEditable(int row, int column) {                
-                return false;               
+				return column < 2;          
 			};
 			
 			@Override
@@ -375,8 +527,70 @@ public class Scadenzario {
 		scrollPaneCompleanni.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		panel_compleanni.add(scrollPaneCompleanni);
 		
-		btnCompleanni = new JButton("Invia notifiche di compleanno");
-		btnCompleanni.addMouseListener(new MouseAdapter() {
+		panel_bottoni_compleanni = new JPanel();
+		panel_compleanni.add(panel_bottoni_compleanni, BorderLayout.SOUTH);
+		GridBagLayout gbl_panel_bottoni_compleanni = new GridBagLayout();
+		gbl_panel_bottoni_compleanni.columnWidths = new int[]{871, 133, 135, 76, 159, 0};
+		gbl_panel_bottoni_compleanni.rowHeights = new int[]{23, 0};
+		gbl_panel_bottoni_compleanni.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
+		gbl_panel_bottoni_compleanni.rowWeights = new double[]{0.0, Double.MIN_VALUE};
+		panel_bottoni_compleanni.setLayout(gbl_panel_bottoni_compleanni);
+		
+		buttonSelezionaMailNotificaCompleanni = new JButton("Deseleziona tutti mail");
+		buttonSelezionaMailNotificaCompleanni.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				boolean selezionaTutti = "Seleziona tutti mail".equals(((JButton)e.getSource()).getText());
+				for(int rowIndex = 0; rowIndex < tableCompleanni.getModel().getRowCount(); rowIndex++){
+					String sms = (String)tableCompleanni.getModel().getValueAt(rowIndex, 3);
+					tableCompleanni.getModel().setValueAt(Boolean.valueOf(selezionaTutti && !"".equals(sms.trim())), rowIndex, 1);
+				}
+				((JButton)e.getSource()).setText(selezionaTutti?"Deseleziona tutti mail":"Seleziona tutti mail");
+			}
+		});
+		GridBagConstraints gbc_buttonSelezionaMailNotificaCompleanni = new GridBagConstraints();
+		gbc_buttonSelezionaMailNotificaCompleanni.fill = GridBagConstraints.HORIZONTAL;
+		gbc_buttonSelezionaMailNotificaCompleanni.anchor = GridBagConstraints.NORTHWEST;
+		gbc_buttonSelezionaMailNotificaCompleanni.insets = new Insets(0, 0, 0, 5);
+		gbc_buttonSelezionaMailNotificaCompleanni.gridx = 1;
+		gbc_buttonSelezionaMailNotificaCompleanni.gridy = 0;
+		panel_bottoni_compleanni.add(buttonSelezionaMailNotificaCompleanni, gbc_buttonSelezionaMailNotificaCompleanni);
+		
+		buttonSelezionaSMSNotificaCompleanni = new JButton("Deseleziona tutti SMS");
+		buttonSelezionaSMSNotificaCompleanni.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				boolean selezionaTutti = "Seleziona tutti SMS".equals(((JButton)e.getSource()).getText());
+				for(int rowIndex = 0; rowIndex < tableCompleanni.getModel().getRowCount(); rowIndex++){
+					String sms = (String)tableCompleanni.getModel().getValueAt(rowIndex, 4);
+					tableCompleanni.getModel().setValueAt(Boolean.valueOf(selezionaTutti && !"".equals(sms.trim())), rowIndex, 0);
+				}
+				((JButton)e.getSource()).setText(selezionaTutti?"Deseleziona tutti SMS":"Seleziona tutti SMS");
+			}
+		});
+		GridBagConstraints gbc_buttonSelezionaSMSNotificaCompleanni = new GridBagConstraints();
+		gbc_buttonSelezionaSMSNotificaCompleanni.anchor = GridBagConstraints.NORTHWEST;
+		gbc_buttonSelezionaSMSNotificaCompleanni.insets = new Insets(0, 0, 0, 5);
+		gbc_buttonSelezionaSMSNotificaCompleanni.gridx = 2;
+		gbc_buttonSelezionaSMSNotificaCompleanni.gridy = 0;
+		panel_bottoni_compleanni.add(buttonSelezionaSMSNotificaCompleanni, gbc_buttonSelezionaSMSNotificaCompleanni);
+		
+		buttonAggiornaCompleanni = new JButton("Aggiorna tabella");
+		buttonAggiornaCompleanni.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				buildTables();
+			}
+		});
+		GridBagConstraints gbc_buttonAggiornaCompleanni = new GridBagConstraints();
+		gbc_buttonAggiornaCompleanni.anchor = GridBagConstraints.NORTHWEST;
+		gbc_buttonAggiornaCompleanni.insets = new Insets(0, 0, 0, 5);
+		gbc_buttonAggiornaCompleanni.gridx = 3;
+		gbc_buttonAggiornaCompleanni.gridy = 0;
+		panel_bottoni_compleanni.add(buttonAggiornaCompleanni, gbc_buttonAggiornaCompleanni);
+		
+		buttonInviaNotificaCompleanni = new JButton("Invia notifiche di scadenza");
+		buttonInviaNotificaCompleanni.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				NotificationsManager notificationsManager = new NotificationsManager();
@@ -422,7 +636,11 @@ public class Scadenzario {
 				buildTables();
 			}
 		});
-		panel_compleanni.add(btnCompleanni, BorderLayout.SOUTH);
+		GridBagConstraints gbc_buttonInviaNotificaCompleanni = new GridBagConstraints();
+		gbc_buttonInviaNotificaCompleanni.fill = GridBagConstraints.BOTH;
+		gbc_buttonInviaNotificaCompleanni.gridx = 4;
+		gbc_buttonInviaNotificaCompleanni.gridy = 0;
+		panel_bottoni_compleanni.add(buttonInviaNotificaCompleanni, gbc_buttonInviaNotificaCompleanni);
 		
 		panel_promemoria = new JPanel();
 		panel_promemoria.setLayout(new BorderLayout());
@@ -435,7 +653,7 @@ public class Scadenzario {
 			private static final long serialVersionUID = 1L;
 			
 			public boolean isCellEditable(int row, int column) {                
-				return column < 2;               
+				return false;              
 			};
 			
 			@Override
@@ -782,7 +1000,7 @@ public class Scadenzario {
 		SmsSender smsSender = new SmsSender();
 		try{
 			lblValoreSmsDisponibili.setText(Integer.toString(smsSender.checkSmsLeft(configBean)));
-		}catch(IOException ioEx){
+		}catch(Exception ioEx){
 			//
 		}
 		
