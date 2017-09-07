@@ -242,9 +242,9 @@ public class Scadenzario {
 		panel_bottoni_scadenze = new JPanel();
 		panel_scadenze.add(panel_bottoni_scadenze, BorderLayout.SOUTH);
 		GridBagLayout gbl_panel_bottoni_scadenze = new GridBagLayout();
-		gbl_panel_bottoni_scadenze.columnWidths = new int[]{871, 133, 135, 145, 76, 159, 0};
+		gbl_panel_bottoni_scadenze.columnWidths = new int[]{762, 133, 135, 145, 76, 1, 0};
 		gbl_panel_bottoni_scadenze.rowHeights = new int[]{23, 0};
-		gbl_panel_bottoni_scadenze.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel_bottoni_scadenze.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 		gbl_panel_bottoni_scadenze.rowWeights = new double[]{0.0, Double.MIN_VALUE};
 		panel_bottoni_scadenze.setLayout(gbl_panel_bottoni_scadenze);
 		
@@ -261,7 +261,6 @@ public class Scadenzario {
 			}
 		});
 		GridBagConstraints gbc_buttonSelezionaMailNotificheScadenza = new GridBagConstraints();
-		gbc_buttonSelezionaMailNotificheScadenza.fill = GridBagConstraints.HORIZONTAL;
 		gbc_buttonSelezionaMailNotificheScadenza.anchor = GridBagConstraints.NORTHWEST;
 		gbc_buttonSelezionaMailNotificheScadenza.insets = new Insets(0, 0, 0, 5);
 		gbc_buttonSelezionaMailNotificheScadenza.gridx = 1;
@@ -288,7 +287,6 @@ public class Scadenzario {
 		panel_bottoni_scadenze.add(buttonSelezionaSmsNotificheScadenza, gbc_buttonSelezionaSmsNotificheScadenza);
 		
 		buttonInvioNotificheScadenza = new JButton("Invia notifiche di scadenza");
-		buttonInvioNotificheScadenza.setHorizontalAlignment(SwingConstants.LEFT);
 		buttonInvioNotificheScadenza.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -399,8 +397,7 @@ public class Scadenzario {
 		gbc_buttonAggiornaNotificheScadenza.gridy = 0;
 		panel_bottoni_scadenze.add(buttonAggiornaNotificheScadenza, gbc_buttonAggiornaNotificheScadenza);
 		GridBagConstraints gbc_buttonInvioNotificheScadenza = new GridBagConstraints();
-		gbc_buttonInvioNotificheScadenza.anchor = GridBagConstraints.EAST;
-		gbc_buttonInvioNotificheScadenza.fill = GridBagConstraints.VERTICAL;
+		gbc_buttonInvioNotificheScadenza.fill = GridBagConstraints.BOTH;
 		gbc_buttonInvioNotificheScadenza.gridx = 5;
 		gbc_buttonInvioNotificheScadenza.gridy = 0;
 		panel_bottoni_scadenze.add(buttonInvioNotificheScadenza, gbc_buttonInvioNotificheScadenza);
@@ -589,7 +586,7 @@ public class Scadenzario {
 		gbc_buttonAggiornaCompleanni.gridy = 0;
 		panel_bottoni_compleanni.add(buttonAggiornaCompleanni, gbc_buttonAggiornaCompleanni);
 		
-		buttonInviaNotificaCompleanni = new JButton("Invia notifiche di scadenza");
+		buttonInviaNotificaCompleanni = new JButton("Invia notifiche di compleanno");
 		buttonInviaNotificaCompleanni.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
